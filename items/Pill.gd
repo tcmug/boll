@@ -15,6 +15,6 @@ func _process(delta):
 	$Mesh.rotate(axis, 5 * delta)
 
 func _on_Area_body_entered(body):
-	Game.emit_signal("pickup", "key")
+	Game.emit_signal("pickup", "pill")
 	queue_free()
 	

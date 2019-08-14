@@ -30,7 +30,10 @@ func _input(event):
 		movement_impulse += temp
 
 func on_pickup(type):
-	$Pickup.play(0)
+	if type == 'pill':
+		$Pill.play(0)
+	else:
+		$Pickup.play(0)
 	print("Got " + type)
 
 func _on_Ball_body_entered(body):

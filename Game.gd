@@ -6,6 +6,7 @@ signal pickup
 var inventory: Array
 
 func _ready():
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	connect("pickup", self, "on_pickup")
 
 func _process(delta):
