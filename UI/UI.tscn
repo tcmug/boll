@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://UI/UI.gd" type="Script" id=1]
+[ext_resource path="res://items/key.png" type="Texture" id=2]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+script = ExtResource( 1 )
+
+[node name="Inventory" type="Label" parent="."]
+margin_right = 40.0
+margin_bottom = 14.0
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+
+[node name="Key" type="Sprite" parent="."]
+visible = false
+position = Vector2( 606.705, 53.1009 )
+scale = Vector2( 0.10944, 0.114364 )
+texture = ExtResource( 2 )
