@@ -41,3 +41,10 @@ func _on_Ball_body_entered(body):
 	if velocity.length() > 1 && body.name != "Floor":
 		if !$Hit.playing:
 			$Hit.play(0)
+	
+	if body.name == "Door":
+		if Game.inventory.find("key") != -1:
+			$Open.play(0)
+			body.open()
+		else:
+			$Denied.play(0)
