@@ -1,11 +1,8 @@
 [gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://BNall.gd" type="Script" id=1]
-[ext_resource path="res://icon.png" type="Texture" id=2]
-
-[sub_resource type="PhysicsMaterial" id=1]
-friction = 0.3
-rough = true
+[ext_resource path="res://BallPhysic.tres" type="PhysicsMaterial" id=1]
+[ext_resource path="res://BNall.gd" type="Script" id=2]
+[ext_resource path="res://icon.png" type="Texture" id=3]
 
 [sub_resource type="SphereShape" id=2]
 radius = 0.5
@@ -16,16 +13,26 @@ height = 1.0
 radial_segments = 32
 
 [sub_resource type="SpatialMaterial" id=4]
-albedo_texture = ExtResource( 2 )
+albedo_texture = ExtResource( 3 )
+metallic = 0.41
 
 [node name="Ball" type="RigidBody"]
-physics_material_override = SubResource( 1 )
-script = ExtResource( 1 )
+collision_layer = 3
+collision_mask = 3
+physics_material_override = ExtResource( 1 )
+script = ExtResource( 2 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 2 )
 
 [node name="Ball" type="MeshInstance" parent="."]
+cast_shadow = 0
 mesh = SubResource( 3 )
 material/0 = SubResource( 4 )
+
+[node name="Probes" type="Spatial" parent="."]
+
+[node name="OnFloor" type="RayCast" parent="Probes"]
+enabled = true
+cast_to = Vector3( 0, -0.52, 0 )
 [connection signal="body_entered" from="." to="." method="_on_Ball_body_entered"]
