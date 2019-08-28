@@ -1,21 +1,21 @@
 extends Camera
 
-export var orbit_distance: float = 10
+export var orbit_height: float = 4
 
 # warning-ignore:unused_signal
 signal drag
 
-var RAY_LENGTH = 1000
-var original_position: Vector3
-var target_position: Vector3
-var position_interpolate: float = 1
-var dragging = false
-var tap_click = 0
+enum Mode {
+  FOLLOW,
+  FIXED
+}
 
-var mouse_coords: Vector3
+var  mode = Mode.FOLLOW
+var RAY_LENGTH = 1000
+var interpolated_target: Vector3
 
 func _ready():
-	translation = (Vector3(1,1,1).normalized() * orbit_distance)
+	translation = (Vector3(1,1,1).normalized() * orbit_height)
 
 func get_object_under_mouse():
 	var mouse_pos = get_viewport().get_mouse_position()
@@ -35,19 +35,20 @@ func get_plane_position():
 		return pos
 	return Vector3(0,0,0)
 
-func move_to_look_at(position: Vector3):
-	target_position = position - (project_ray_normal(Vector2(0, 0)) * orbit_distance)
-	original_position = translation
-	position_interpolate = 0
-
 func _process(delta):
+	var target = Game.Player.translation
 	
-	var pos = get_parent().get_node("Ball").translation
-	move_to_look_at(pos)
-
-	if position_interpolate < 1:
-		position_interpolate += delta * 10
-		translation = original_position.linear_interpolate(target_position, position_interpolate)
-
+	# Target position
+	if mode == Mode.FOLLOW:
+		var camera_plane_origin = target + Vector3(0, orbit_height, 0)
+		var current = Vector3(translation.x, orbit_height, translation.z)
+		var normal_to_current_pos = (current - camera_plane_origin).normalized()
+		var camera_target_pos = camera_plane_origin + (normal_to_current_pos * orbit_height)
+		var add = (camera_target_pos - translation) * delta
+		look_at_from_position(camera_target_pos + add, Game.Player.translation, Vector3(0, 1, 0))
+	elif mode == Mode.FIXED:
+		var camera_target_pos = target + Vector3(orbit_height, orbit_height, orbit_height)
+		var add = (camera_target_pos - translation) * delta
+		look_at_from_position(camera_target_pos + add, Game.Player.translation, Vector3(0, 1, 0))
 
 

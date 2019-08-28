@@ -26,7 +26,6 @@ Game="*res://Game.gd"
 [display]
 
 window/stretch/aspect="expand"
-window/stretch/shrink=2.0
 
 [input]
 

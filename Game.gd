@@ -1,6 +1,6 @@
 extends Node
 
-onready var Player = get_node("/root/Spatial/Ball")
+onready var Player = null
 signal pickup
 
 var inventory: Array

@@ -6,7 +6,6 @@ extends RigidBody
 var camera: Camera
 var listeners: Spatial
 var onFloor: RayCast
-var onWall: Area
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -15,8 +14,6 @@ func _ready():
 	listeners = get_node("Probes")
 	listeners.set_as_toplevel(true)
 	onFloor = listeners.get_node("OnFloor")
-	onWall = listeners.get_node("OnWall")
-	
 	
 var movement_impulse: Vector3
 var max_impulse: float = 10
@@ -45,13 +42,22 @@ func _physics_process(delta):
 	apply_central_impulse(movement_impulse * 5 * delta)
 	movement_impulse = Vector3(0, 0, 0)
 
+var phase = 0
+
 func _process(delta):
 	listeners.transform.origin = self.transform.origin
+	#$Inner.rotate(Vector3(0, 0, 1), 10 * delta)
+	#$Cube.rotate(Vector3(1, 0, 1).normalized(), 5 * delta)
+	#$Cube.translation = translation
+	#var a = (sin(phase) * 0.4) + 0.5
+	#var b = (sin(phase + 1) * 0.4) + 0.5
+	#var c = (sin(phase + 2) * 0.4) + 0.5
+	#phase += delta * 10
+	#$Inner.scale = Vector3(a, b, c)
 
 func _input(event):
 	# Mouse movement & we have contact => apply some force to the ball.
 	if event is InputEventMouseMotion && onFloor.is_colliding():
-		# print($RayCast.get_collider().name, $RayCast.get_collision_point())
 		# Transform mouse x & y movement to camera space so that the 
 		# direction of the applied force is in the correct direction.
 		var temp = Vector3(event.relative.x, 0, event.relative.y)
@@ -67,16 +73,4 @@ func on_pickup(type):
 		$Pickup.play(0)
 	print("Got " + type)
 
-func _on_Ball_body_entered(body):
-	var velocity = Vector3(linear_velocity.x, 0, linear_velocity.y)
-	if velocity.length() > 5 && onFloor.is_colliding():
-		if !$Hit.playing:
-			$Hit.play(0)
-	
-	if body.name == "Door":
-		if Game.inventory.find("key") != -1:
-			$Open.play(0)
-			body.open()
-		else:
-			$Denied.play(0)
 
